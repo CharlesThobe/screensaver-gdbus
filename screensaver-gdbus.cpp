@@ -200,7 +200,7 @@ int main()
 	GDBusConnection *connection;
 	GOptionContext *context;
 	gboolean retval;
-	GError *error;
+	GError *error = nullptr;
 	GDBusMessage *reply;
 
 	connection = g_bus_get_sync (G_BUS_TYPE_SESSION, NULL, &error);
