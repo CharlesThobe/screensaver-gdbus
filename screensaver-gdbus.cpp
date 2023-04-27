@@ -20,14 +20,9 @@
  * Authors: William Jon McCann <mccann@jhu.edu>
  *
  */
-//#include "config.h"
-//#include <stdlib.h>
-//#include <locale.h>
-//#include <glib.h>
+
+
 #include <gio/gio.h>
-//#include <glib/gi18n.h>
-//#include <glib-unix.h>
-//#include "gs-bus.h"
 
 #include <iostream>
 #include <mutex>
@@ -36,28 +31,14 @@
 #define GS_PATH "/org/freedesktop/ScreenSaver"
 #define GS_INTERFACE "org.freedesktop.ScreenSaver"
 
-//static gboolean do_lock = FALSE;
-//static gboolean do_activate = FALSE;
-//static gboolean do_deactivate = FALSE;
-//static gboolean do_version = FALSE;
-//static gboolean do_poke = FALSE;
-//static gboolean do_inhibit = FALSE;
-//static gboolean do_uninhibit = FALSE;
-//static gboolean do_query = FALSE;
-//static gboolean do_time = FALSE;
-static char *inhibit_reason = NULL;
-static char *inhibit_application = NULL;
+static char *inhibit_reason = nullptr;
+static char *inhibit_application = nullptr;
 static gint32 uninhibit_cookie = 0;
-//static int exit_status = EXIT_SUCCESS;
-//static gchar **command_argv = NULL;
 
-//static GMainLoop *loop = NULL;
-static GDBusMessage *
-
-screensaver_send_message_inhibit(GDBusConnection *connection, const char *application, const char *reason)
+static GDBusMessage *screensaver_send_message_inhibit(GDBusConnection *connection, const char *application, const char *reason)
 {
-	GDBusMessage *message, *reply;
-	GError *error;
+	GDBusMessage *message = nullptr, *reply = nullptr;
+	GError *error = nullptr;
 	g_return_val_if_fail(connection != NULL, NULL);
 	g_return_val_if_fail(application != NULL, NULL);
 	g_return_val_if_fail(reason != NULL, NULL);
@@ -89,8 +70,8 @@ screensaver_send_message_inhibit(GDBusConnection *connection, const char *applic
 
 static void screensaver_send_message_uninhibit(GDBusConnection *connection, gint32 cookie)
 {
-	GDBusMessage *message;
-	GError *error;	
+	GDBusMessage *message = nullptr;
+	GError *error = nullptr;	
 	g_return_if_fail(connection != NULL);	
 	message = g_dbus_message_new_method_call(GS_SERVICE, GS_PATH, GS_INTERFACE, "UnInhibit");
 	if (message == NULL) {
@@ -123,7 +104,7 @@ static void screensaver_send_message_uninhibit(GDBusConnection *connection, gint
 static gboolean parse_reply(GDBusMessage *reply, const gchar *format_string, ...)
 {
 	va_list   ap;
-	GVariant *body;
+	GVariant *body = nullptr;
 	GError   *error = NULL;
 
 	if (reply == NULL)
@@ -171,37 +152,12 @@ static gboolean parse_reply(GDBusMessage *reply, const gchar *format_string, ...
 	return TRUE;
 }
 
-
-
-int nonexistent()
-{
-	GDBusConnection *connection;
-	GOptionContext *context;
-	gboolean retval;
-	GError *error;
-	GDBusMessage *reply;
-
-	connection = g_bus_get_sync (G_BUS_TYPE_SESSION, NULL, &error);
-	if (connection == NULL) {
-		g_message ("Failed to get session bus: %s", error->message);
-		g_error_free (error);
-		return EXIT_FAILURE;
-	}
-	reply = screensaver_send_message_inhibit(connection, inhibit_application ? inhibit_application : "Unknown", inhibit_reason ? inhibit_reason : "Unknown");
-//separator
-	parse_reply(reply, "(u)", &uninhibit_cookie);
-	screensaver_send_message_uninhibit(connection, uninhibit_cookie);
-	printf("Send uninhibit to the screensaver with cookie %d\n", uninhibit_cookie);
-	return 0;
-}
-
 int main()
 {
-	GDBusConnection *connection;
-	GOptionContext *context;
-	gboolean retval;
+	GDBusConnection *connection = nullptr;
+	GOptionContext *context = nullptr;
 	GError *error = nullptr;
-	GDBusMessage *reply;
+	GDBusMessage *reply = nullptr;
 
 	connection = g_bus_get_sync (G_BUS_TYPE_SESSION, NULL, &error);
 	if (connection == NULL)
@@ -216,6 +172,7 @@ int main()
 	parse_reply (reply, "(u)", &uninhibit_cookie);
 	cout << "uninhibit cookie: " << uninhibit_cookie << endl;
 	cout << "Press ctrl+C to exit." << endl;
+	//screensaver_send_message_uninhibit(connection, uninhibit_cookie);
 	std::mutex m;
 	m.lock();
 	m.lock();
