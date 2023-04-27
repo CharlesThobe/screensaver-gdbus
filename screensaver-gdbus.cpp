@@ -21,12 +21,12 @@
  *
  */
 //#include "config.h"
-#include <stdlib.h>
-#include <locale.h>
-#include <glib.h>
+//#include <stdlib.h>
+//#include <locale.h>
+//#include <glib.h>
 #include <gio/gio.h>
-#include <glib/gi18n.h>
-#include <glib-unix.h>
+//#include <glib/gi18n.h>
+//#include <glib-unix.h>
 //#include "gs-bus.h"
 
 #include <iostream>
@@ -191,7 +191,7 @@ int nonexistent()
 //separator
 	parse_reply(reply, "(u)", &uninhibit_cookie);
 	screensaver_send_message_uninhibit(connection, uninhibit_cookie);
-	g_print(_("Send uninhibit to the screensaver with cookie %d\n"), uninhibit_cookie);
+	printf("Send uninhibit to the screensaver with cookie %d\n", uninhibit_cookie);
 	return 0;
 }
 
