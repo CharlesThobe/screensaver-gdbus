@@ -29,6 +29,9 @@
 #include <glib-unix.h>
 //#include "gs-bus.h"
 
+#include <iostream>
+#include <mutex>
+
 #define GS_SERVICE "org.freedesktop.ScreenSaver"
 #define GS_PATH "/org/freedesktop/ScreenSaver"
 #define GS_INTERFACE "org.freedesktop.ScreenSaver"
@@ -189,5 +192,31 @@ int nonexistent()
 	parse_reply(reply, "(u)", &uninhibit_cookie);
 	screensaver_send_message_uninhibit(connection, uninhibit_cookie);
 	g_print(_("Send uninhibit to the screensaver with cookie %d\n"), uninhibit_cookie);
+	return 0;
 }
 
+int main()
+{
+	GDBusConnection *connection;
+	GOptionContext *context;
+	gboolean retval;
+	GError *error;
+	GDBusMessage *reply;
+
+	connection = g_bus_get_sync (G_BUS_TYPE_SESSION, NULL, &error);
+	if (connection == NULL)
+	{
+		g_message ("Failed to get session bus: %s", error->message);
+		g_error_free (error);
+		return EXIT_FAILURE;
+	}
+	reply = screensaver_send_message_inhibit(connection, inhibit_application ? inhibit_application : "Unknown", inhibit_reason ? inhibit_reason : "Unknown");
+	using namespace std;
+	cout << "Raw function return: " << reply << endl;
+	parse_reply (reply, "(u)", &uninhibit_cookie);
+	cout << "uninhibit cookie: " << uninhibit_cookie << endl;
+	cout << "Press ctrl+C to exit." << endl;
+	std::mutex m;
+	m.lock();
+	m.lock();
+}

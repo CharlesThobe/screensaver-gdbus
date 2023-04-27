@@ -1,12 +1,13 @@
 cmake_minimum_required(VERSION 3.25)
-project("Rails")
+project("screensaver-gdbus")
 
-add_executable(test
+add_executable(screensaver-gdbus
 screensaver-gdbus.cpp
 )
 
-install(TARGETS test DESTINATION bin)
+install(TARGETS screensaver-gdbus DESTINATION bin)
 
 find_package(PkgConfig REQUIRED)
-pkg_check_modules(GLIB REQUIRED IMPORTED_TARGET glib-2.0)
-target_link_libraries(target PkgConfig::deps)
+pkg_check_modules(deps REQUIRED IMPORTED_TARGET glib-2.0 gio-2.0)
+target_link_libraries(screensaver-gdbus PkgConfig::deps)
+
